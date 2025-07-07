@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    overflow: hidden;
+}
+
+/* Hide number input spinners/arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Only make zoom input non-focusable, allow page input to be editable */
+input[type="number"].zoom-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    pointer-events: none;
+    user-select: none;
+}
+
+input[type="number"].page-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Auto-select all text when page input is focused */
+input.page-input:focus {
+    user-select: all;
+}
+
+input.page-input {
+    user-select: all;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+}
