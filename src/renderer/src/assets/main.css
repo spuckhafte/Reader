@@ -63,3 +63,23 @@ input.page-input {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
 }
+
+.react-pdf__Page__textContent [data-selection-ids],
+.react-pdf__Page__textContent .text-selection-highlighted {
+    background-color: rgba(255, 71, 87, 0.25) !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+    min-width: 0.2em;
+    display: inline;
+}
+
+.react-pdf__Page__textContent {
+    user-select: text !important;
+    pointer-events: auto !important;
+}
+
+.react-pdf__Page__textContent > span {
+    user-select: text !important;
+    pointer-events: auto !important;
+}

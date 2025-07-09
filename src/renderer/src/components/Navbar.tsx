@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Sparkles } from "lucide-react";
 import React from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Atoms from "../lib/atoms";
+import { textSelectionManager, TextSelection } from "../lib/textSelection";
 
 export default function Navbar() {
     const [currentPage] = useAtom(Atoms.page.current);
@@ -43,62 +44,95 @@ export default function Navbar() {
         e.target.select();
     };
 
-    return <div className="bg-gray-800 backdrop-blur-sm border-b border-white/10 flex items-center justify-center px-4 py-1.5">
-        <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-                <button
-                    onClick={handlePagePrevious}
-                    disabled={currentPage <= 1}
-                    className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                    <ChevronLeft size={14} />
-                </button>
-                <div className="flex items-center gap-1.5 bg-white/5 rounded px-2 py-1 border border-white/10">
-                    <input
-                        type="text"
-                        value={pageInputValue}
-                        onChange={handlePageInputChange}
-                        onKeyDown={handlePageInputKeyPress}
-                        onFocus={handlePageInputFocus}
-                        className="w-8 px-0.5 py-0 text-center bg-transparent text-white text-xs focus:outline-none page-input"
-                    />
-                    <span className="text-white/70 text-xs">/ {numPages || 0}</span>
-                </div>
-                <button
-                    onClick={handlePageNext}
-                    disabled={currentPage >= (numPages || 1)}
-                    className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                    <ChevronRight size={14} />
-                </button>
-            </div>
+    const handleSummarizeText = () => {
+        const selection = textSelectionManager.createSelection((textSelection: TextSelection) => {
+            console.log('Text selected for summarization:', {
+                id: textSelection.id,
+                text: textSelection.text,
+                nodes: textSelection.nodes.length,
+                pages: textSelection.nodes.map(n => n.pageNumber)
+            });
 
-            <div className="w-px h-4 bg-white/20"></div>
-            
-            <div className="flex items-center gap-1">
-                <button
-                    onClick={() => setZoomOut()}
-                    disabled={scale <= 0.25}
-                    className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                    <ZoomOut size={14} />
-                </button>
-                <div className="flex items-center gap-0.5 bg-white/5 rounded px-2 py-1 border border-white/10">
-                    <input
-                        type="number"
-                        value={Math.round(scale * 100)}
-                        readOnly
-                        className="w-10 px-0.5 py-0 text-center bg-transparent text-white text-xs focus:outline-none zoom-input"
-                    />
-                    <span className="text-white/70 text-xs">%</span>
+            console.log('Selected text:', textSelection.text);
+        });
+
+        if (!selection) {
+            console.log('No text selected');
+        }
+    };
+
+    return <div className="bg-gray-800 backdrop-blur-sm border-b border-white/10 flex items-center justify-center px-4 py-1.5">
+        <div className="w-full">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={handlePagePrevious}
+                            disabled={currentPage <= 1}
+                            className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            <ChevronLeft size={14} />
+                        </button>
+                        <div className="flex items-center gap-1.5 bg-white/5 rounded px-2 py-1 border border-white/10">
+                            <input
+                                type="text"
+                                value={pageInputValue}
+                                onChange={handlePageInputChange}
+                                onKeyDown={handlePageInputKeyPress}
+                                onFocus={handlePageInputFocus}
+                                className="w-8 px-0.5 py-0 text-center bg-transparent text-white text-xs focus:outline-none page-input"
+                            />
+                            <span className="text-white/70 text-xs">/ {numPages || 0}</span>
+                        </div>
+                        <button
+                            onClick={handlePageNext}
+                            disabled={currentPage >= (numPages || 1)}
+                            className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            <ChevronRight size={14} />
+                        </button>
+                    </div>
+
+                    <div className="w-px h-4 bg-white/20"></div>
+
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => setZoomOut()}
+                            disabled={scale <= 0.25}
+                            className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            <ZoomOut size={14} />
+                        </button>
+                        <div className="flex items-center gap-0.5 bg-white/5 rounded px-2 py-1 border border-white/10">
+                            <input
+                                type="number"
+                                value={Math.round(scale * 100)}
+                                readOnly
+                                className="w-10 px-0.5 py-0 text-center bg-transparent text-white text-xs focus:outline-none zoom-input"
+                            />
+                            <span className="text-white/70 text-xs">%</span>
+                        </div>
+                        <button
+                            onClick={() => setZoomIn()}
+                            disabled={scale >= 3}
+                            className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            <ZoomIn size={14} />
+                        </button>
+                    </div>
                 </div>
-                <button
-                    onClick={() => setZoomIn()}
-                    disabled={scale >= 3}
-                    className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                    <ZoomIn size={14} />
-                </button>
+
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={handleSummarizeText}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-white/70 hover:text-white hover:bg-white/10 bg-white/5 rounded border border-white/10 transition-all text-xs"
+                    >
+                        <Sparkles size={12} />
+                        <span>Summarize Text</span>
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
