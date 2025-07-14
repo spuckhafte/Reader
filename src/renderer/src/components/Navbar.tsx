@@ -44,6 +44,16 @@ export default function Navbar() {
         e.target.select();
     };
 
+    const handlePageInputFocusOut = () => {
+        const value = parseInt(pageInputValue);
+        if (!isNaN(value) && value !== currentPage) {
+            setPageJump(value);
+        } else {
+            setPageInputValue(currentPage.toString());
+        }
+        setPageLastChangeMode("input");
+    };
+
     const handleSummarizeText = () => {
         const selection = textSelectionManager.createSelection((textSelection: TextSelection) => {
             console.log('Text selected for summarization:', {
@@ -81,6 +91,7 @@ export default function Navbar() {
                                 onChange={handlePageInputChange}
                                 onKeyDown={handlePageInputKeyPress}
                                 onFocus={handlePageInputFocus}
+                                onBlur={handlePageInputFocusOut}
                                 className="w-8 px-0.5 py-0 text-center bg-transparent text-white text-xs focus:outline-none page-input"
                             />
                             <span className="text-white/70 text-xs">/ {numPages || 0}</span>
@@ -126,7 +137,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-1">
                     <button
                         onClick={handleSummarizeText}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-white/70 hover:text-white hover:bg-white/10 bg-white/5 rounded border border-white/10 transition-all text-xs"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-white hover:text-white bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm hover:backdrop-blur-md rounded border border-white/20 hover:border-white/30 transition-all text-xs shadow-lg"
                     >
                         <Sparkles size={12} />
                         <span>Summarize Text</span>
